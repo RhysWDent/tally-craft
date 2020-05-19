@@ -1,28 +1,36 @@
 import React from "react"
 import { useStaticQuery, graphql } from "gatsby"
 
-export const CraftGrid = () => {
+export const GridTile = ({ node }) => {
+  return (
+    <div>
+      <h2>{node.title}</h2>
+      <h3>{node.category.replace("-", " ")}</h3>
+      <p>{node.description}</p>
+    </div>
+  )
+}
+
+export const CraftGrid = ({ category }) => {
   const data = useStaticQuery(graphql`
     query {
       allContentfulCraft {
-        nodes {
-          images {
-            fixed {
-              src
-            }
+        edges {
+          node {
+            title
+            slug
+            category
           }
         }
       }
     }
   `)
   console.log(data)
-
   return (
     <div>
-      Craft Grid
-      {data.allContentfulCraft.nodes.map(node => {
-        return <img src={node.images[0].fixed.src} />
-      })}
+      {data.allContentfulCraft.edges.map(edge => (
+        <GridTile node={edge.node} />
+      ))}
     </div>
   )
 }
