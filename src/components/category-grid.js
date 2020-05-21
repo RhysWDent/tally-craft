@@ -1,13 +1,14 @@
 import React from "react"
-import { useStaticQuery, graphql } from "gatsby"
+import { Link, useStaticQuery, graphql } from "gatsby"
 
-export const CategoryTile = () => {
+export const CategoryTile = ({ children, slug }) => {
   //Display category name and background
-  return <div></div>
+  return <Link to={`/${slug}`}>{children}</Link>
 }
 
 export const CategoryGrid = () => {
-  const data = useStaticQuery(graphql`
+  const categories = []
+  useStaticQuery(graphql`
     query {
       allContentfulCraft {
         edges {
@@ -17,18 +18,16 @@ export const CategoryGrid = () => {
         }
       }
     }
-  `)
-
-  const categories = []
-  data.allContentfulCraft.edges.forEach(edge => {
+  `).allContentfulCraft.edges.forEach(edge => {
     if (!categories.includes(edge.node.category))
       categories.push(edge.node.category)
   })
+
   console.log(categories)
   return (
     <div>
       {categories.map(category => (
-        <div>{category}</div>
+        <CategoryTile slug={category.toLowerCase()}>{category}</CategoryTile>
       ))}
     </div>
   )
